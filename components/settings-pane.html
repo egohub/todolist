@@ -1,0 +1,254 @@
+<polymer-element name="settings-pane" layout vertical attributes="settings">
+  <template>
+    <style>
+ 
+      @media (max-width:649px){
+        #settingsWrapper {
+          width: 95vw !important;
+        }
+      }
+
+      #settingsWrapper {
+        font-family: "Open Sans";
+        font-size: 16px;
+        margin: 0 auto;
+        padding: 30px 0px;
+        width: 650px;
+      }
+
+      #settingsOverview {
+        border-bottom: solid 1px #e0e0e0;
+        font-size: 16px;
+        padding: 15px 30px 30px;
+        text-align: center;
+      }
+
+      paper-toggle-button {
+        margin-bottom:-10px;
+      }
+
+      paper-toggle-button::shadow [checked] .toggle {
+        background-color: #F50057;
+      }
+
+      paper-toggle-button::shadow [checked] .toggle-ink {
+        color: #F50057;
+      }
+
+      core-label {
+        margin-bottom:20px;
+      }
+
+      paper-input {
+        width:50px;
+      }
+
+      paper-input /deep/ .focused-underline {
+        background-color: #F50057;
+      }
+
+      paper-input-decorator /deep/ .focused-underline {
+        background-color: #F50057;
+      }
+
+      paper-slider::shadow paper-input /deep/ .focused-underline {
+        background-color: #F50057;
+      }
+
+      paper-slider::shadow paper-input-decorator /deep/ .focused-underline {
+        background-color: #F50057;
+      }
+      
+      paper-slider::shadow #sliderBar::shadow #activeProgress {
+        background-color: #F50057;
+      }
+
+      paper-slider::shadow #sliderKnobInner {
+        background-color: #F50057;
+      }
+
+      paper-slider::shadow #sliderKnobInner::before {
+        background-color: #F50057;
+      }
+    </style>
+    
+    <p id="settingsOverview">Any settings you change are automatically saved. Feel free to close the tab with <i>Ctrl+w</i> after you are done.</p>
+    <div id="settingsWrapper" cross-fade flex layout vertical>
+      <core-label for layout horizontal>
+        <span flex>Highlight syntax in code blocks</span>
+        <paper-toggle-button checked="{{settings.highlightSyntax}}"></paper-toggle-button>
+      </core-label>
+
+      <core-label for layout horizontal>
+        <span flex>Syntax highlighting theme</span>
+
+        <paper-dropdown-menu label="Syntax Highlighting Theme">
+          <paper-dropdown class="dropdown">
+            <core-menu class="menu" selected="{{settings.highlightingTheme}}">
+              <template repeat="{{themes}}">
+                <paper-item>{{}}</paper-item>
+              </template>
+            </core-menu>
+          </paper-dropdown>
+        </paper-dropdown-menu>
+
+      </core-label>
+
+      <core-label for layout horizontal wrap>
+        <span flex>Synchronize scrolling between panels</span>
+        <paper-toggle-button checked="{{settings.syncedScrolling}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Window always on top</span>
+        <paper-toggle-button checked="{{settings.alwaysOnTop}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Font size</span>
+        <paper-input value="{{settings.fontSize}}"></paper-input>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Use Monospaced Font for Markdown</span>
+        <paper-toggle-button checked="{{settings.monospaceFont}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Auto Save</span>
+        <paper-toggle-button checked="{{settings.autosaveEnabled}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout vertical>
+        <span>Auto Save Interval (minutes)</span>
+        <div layout horizontal>
+          <paper-slider flex min="1" max="30" editable value="{{settings.autosaveInterval}}"></paper-slider>
+        </div>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Render LaTeX code</span>
+        <paper-toggle-button checked="{{settings.renderLaTeX}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout horizontal>
+        <span flex>Use Maruku markdown syntax (instead of Gruber)</span>
+        <paper-toggle-button checked="{{settings.useMaruku}}"></paper-toggle-button>
+      </core-label>
+      <core-label for layout horizontal>
+        <span>Custom CSS<br>(use at your own risk)</span>
+        <paper-input-decorator flex style="margin-left: 20px; margin-top: -1em;" label="Custom CSS">
+            <textarea id="customCSS" value="{{settings.customCSS}}" rows=5></textarea>
+        </paper-input-decorator>
+      </core-label>
+    </div>
+  </template>
+  <script>
+      Polymer('settings-pane', {
+        settings:{},
+        observe:{
+          'settings.syncedScrolling': 'settingsUpdated',
+          'settings.alwaysOnTop': 'onTopSettingUpdated',
+          'settings.fontSize' : 'settingsUpdated',
+          'settings.monospaceFont' : 'settingsUpdated',
+          'settings.autosaveEnabled' : 'autosaveUpdated',
+          'settings.autosaveInterval' : 'autosaveUpdated',
+          'settings.renderLaTeX' : 'settingsUpdated',
+          'settings.highlightSyntax' : 'settingsUpdated',
+          'settings.customCSS' : 'settingsUpdated',
+          'settings.highlightingTheme': 'settingsUpdated'
+        },
+        settingsUpdated:function(){
+          this.fire("settings-changed",{msg:"settings changed"});
+        },
+        onTopSettingUpdated:function(o,n){
+          chrome.app.window.current().setAlwaysOnTop(n);
+          this.settingsUpdated();
+        },
+        autosaveUpdated:function(){
+          this.fire("autosave-update",{msg:"autosave updated"});
+          this.settingsUpdated();
+        },
+        themes: [
+        // 'agate',
+        'androidstudio',
+        'arta',
+        'ascetic',
+        'atelier-cave.light',
+        'atelier-cave.dark',
+        'atelier-dune.light',
+        'atelier-dune.dark',
+        'atelier-estuary.light',
+        'atelier-estuary.dark',
+        'atelier-forest.light',
+        'atelier-forest.dark',
+        'atelier-heath.light',
+        'atelier-heath.dark',
+        'atelier-lakeside.light',
+        'atelier-lakeside.dark',
+        'atelier-plateau.light',
+        'atelier-plateau.dark',
+        'atelier-savanna.light',
+        'atelier-savanna.dark',
+        'atelier-seaside.light',
+        'atelier-seaside.dark',
+        'atelier-sulphurpool.light',
+        'atelier-sulphurpool.dark',
+        // 'brown_paper',
+        'codepen-embed',
+        'color-brewer',
+        'dark',
+        'darkula',
+        'default',
+        'docco',
+        'far',
+        'foundation',
+        'github',
+        'github-gist',
+        'googlecode',
+        'grayscale',
+        'hopscotch',
+        'hybrid',
+        'idea',
+        'ir_black',
+        'kimbie.light',
+        'kimbie.dark',
+        'magula',
+        'mono-blue',
+        'monokai',
+        'monokai_sublime',
+        'obsidian',
+        'paraiso.light',
+        'paraiso.dark',
+        // 'pojoaque',
+        'railscasts',
+        'rainbow',
+        // 'school_book',
+        'solarized_dark',
+        'solarized_light',
+        'sunburst',
+        'tomorrow',
+        'tomorrow-night-blue',
+        'tomorrow-night-bright',
+        'tomorrow-night',
+        'tomorrow-night-eighties',
+        'vs',
+        'xcode',
+        'zenburn'
+      ],
+
+        ready: function(){
+
+          this.$.customCSS.addEventListener("keydown", function(e) {
+            var keyCode = e.keyCode || e.which;
+
+            if (keyCode === 9) {
+              e.preventDefault();
+              var start = $(this).get(0).selectionStart;
+              var end = $(this).get(0).selectionEnd;
+
+              // set textarea value to: text before caret + tab + text after caret
+              $(this).val($(this).val().substring(0, start) + "    " + $(this).val().substring(end));
+
+              // put caret at right position again
+              $(this).get(0).selectionStart =
+              $(this).get(0).selectionEnd = start + 4;
+            }
+          });
+        }
+    });
+</script>
+</polymer-element>

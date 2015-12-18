@@ -1,0 +1,44 @@
+<polymer-element name="markdown-editor" layout vertical attributes="markdown syncScrollSetting fontSize monospaceFont renderKaTeX useMaruku highlightSyntax customCSS themeNumber">
+  <template>
+    <link href="katex.min.css" rel="stylesheet" type="text/css">
+    <script src="../scripts/jquery.min.js"></script>
+    <script src="../node_modules/split-html/index.js"></script>
+    <style id="themeLoader">{{theme}}</style>
+
+    <style>
+      #preview {
+        color: #212121;
+        cursor: pointer;
+        font-family: "Open Sans";
+        font-size: {{fontSize}};
+        margin: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 0 15px;
+        word-wrap: break-word;
+      }
+      #markdown {
+        border-right: solid 1px #e0e0e0;
+        border: none;
+        color: #212121;
+        font-family: {{monospaceFont | markdownFont}};
+        font-size: {{fontSize}};
+        outline: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 15px;
+        resize: none;
+      }
+      #wrapper {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <style id="customStyle"></style>
+    <div id="wrapper" layout horizontal flex>
+      <textarea id="markdown" value="{{markdown}}" autofocus flex></textarea>
+      <div id="preview" flex></div>
+    </div>
+  </template>
+  <script src="markdown-editor-bundled.js"></script>
+</polymer-element>

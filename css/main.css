@@ -1,0 +1,45 @@
+body {
+  color: #212121;
+  font-family: "Open Sans";
+}
+
+core-toolbar, paper-tabs{
+  background-color: #03A9F4;
+  color: white;
+  width: 100%;
+}
+
+settings-pane {
+  overflow: auto;
+}
+
+#drag {
+  -webkit-app-region: drag;
+}
+
+#taskbar {
+  background-color: #0288D1;
+}
+
+html-tab, paper-tab {
+  min-width: 150px;
+}
+
+paper-tabs::shadow #selectionBar {
+  background-color: #F50057;
+}
+html-tab::shadow #ink, paper-tab::shadow #ink {
+  color: #80D8FF;
+}
+
+paper-fab {
+  background-color: #F50057;
+  bottom: 20px;
+  position: fixed;
+  right: 20px;
+}
+
+markdown-editor {
+  height: 100%;
+  width: 100%;
+}
